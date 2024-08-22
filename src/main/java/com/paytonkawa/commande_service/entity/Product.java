@@ -11,17 +11,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-@Entity
 public class Product {
 
-	@Id
 	private int id;
-	@NotBlank(message="the product should have a name")
-	@Size(min=2)
 	private String name;
 	private String description;
 	private int stock;
-	@NotBlank(message="you should asign a price to the product")
 	private double price;
 	private LocalDateTime createdAt;
 	
