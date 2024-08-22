@@ -22,7 +22,7 @@ public class Command {
 	@NotBlank(message="customer id cannot be blank")
 	private int customerId;
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<Integer> products;
+	private List<Product> products;
 	private LocalDateTime createdAt;
 	
 	
@@ -39,9 +39,9 @@ public class Command {
 	}
 	
 	
-	public void addProductToCommand(int productId) {
+	public void addProductToCommand(Product product) {
 		if(this.products==null) this.products = new ArrayList<>();
-		this.products.add(productId);
+		this.products.add(product);
 	}
 
 	public int getCustomerId() {
@@ -54,7 +54,7 @@ public class Command {
 	}
 
 
-	public List<Integer> getProducts() {
+	public List<Product> getProducts() {
 		return products;
 	}
 

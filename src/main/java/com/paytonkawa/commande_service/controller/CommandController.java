@@ -8,17 +8,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.paytonkawa.commande_service.entity.Command;
 import com.paytonkawa.commande_service.entity.Product;
 import com.paytonkawa.commande_service.rest_client.ProductFeignClient;
+import com.paytonkawa.commande_service.services.CommandServices;
 
 @RestController
 @RequestMapping("command")
 public class CommandController {
 
 	@Autowired
-	private ProductFeignClient productRestClient;
+	private CommandServices commandServices;
 	@GetMapping()
-	public ResponseEntity<List<Product>> products(){
-		return this.productRestClient.getAllProducts();
+	public ResponseEntity<Command> products(){
+
+		return this.commandServices.addProductToCommand(1, 1, 2);
 	}
 }

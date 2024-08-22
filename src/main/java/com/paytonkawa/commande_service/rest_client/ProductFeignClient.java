@@ -12,4 +12,6 @@ import com.paytonkawa.commande_service.entity.Product;
 public interface ProductFeignClient {
 	@GetMapping()
 	ResponseEntity<List<Product>> getAllProducts();
+	@GetMapping("{id}")
+	ResponseEntity<Product> getProductById(int productId);
 }
