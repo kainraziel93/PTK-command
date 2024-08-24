@@ -46,11 +46,14 @@ public class CommandServices {
 			try {
 				System.out.println("product found and available stock  ");
 				Command command = this.commandRepo.findById(commandId).get();
-				product.setQuantity(quantity);
-				command.getProducts().add(product);
-				this.commandRepo.save(command);
-				//update the product database by comunicating with product-service with kafka(to add later)
-				return ResponseEntity.ok(command);
+				if(command.isValidated()==false) {
+					product.setQuantity(quantity);
+					command.getProducts().add(product);
+					this.commandRepo.save(command);
+					//update the product database by comunicating with product-service with kafka(to add later)
+					return ResponseEntity.ok(command);
+				}
+				
 			} catch (Exception e) {
 				System.out.println("somethinig went wrong =>"+e.getMessage());
 			return ResponseEntity.badRequest().build();
@@ -106,7 +109,7 @@ public class CommandServices {
 			
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body("error deleting the product");
-		};
+		}
 	}
 	public Product getProductById(int productId){
 		ResponseEntity<Product> productResponse = this.productRestClient.getProductById(productId);
