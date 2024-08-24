@@ -20,12 +20,17 @@ import com.paytonkawa.commande_service.rest_client.ProductFeignClient;
 public class CommandServices {
 
 
-	@Autowired
 	private CommandRepo commandRepo;
-	@Autowired
 	private ProductFeignClient productRestClient;
 	
 	
+	
+	public CommandServices(CommandRepo commandRepo, ProductFeignClient productRestClient) {
+		super();
+		this.commandRepo = commandRepo;
+		this.productRestClient = productRestClient;
+	}
+
 	public ResponseEntity<List<Command>> getAllCommands() {
 		List<Command> commands = this.commandRepo.findAll();
 		return ResponseEntity.ok(commands);
