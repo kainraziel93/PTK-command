@@ -6,11 +6,17 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.slf4j.LoggerFactory;
 
 import com.paytonkawa.commande_service.dto.CommandDto;
+import com.paytonkawa.commande_service.dto.UpdateProductStockDto;
 import com.paytonkawa.commande_service.entity.Command;
 import com.paytonkawa.commande_service.entity.Product;
 import com.paytonkawa.commande_service.repo.CommandRepo;
@@ -22,11 +28,14 @@ public class CommandServices {
 
 	private CommandRepo commandRepo;
 	private ProductFeignClient productRestClient;
+	@Value("${kafka.topic}")
+	private String messageTopic;
+	@Autowired
+	private KafkaTemplate KafkaTemplate;
 	
-	
-	
-	public CommandServices(CommandRepo commandRepo, ProductFeignClient productRestClient) {
-		super();
+	public CommandServices(CommandRepo commandRepo,
+			ProductFeignClient productRestClient
+			) {
 		this.commandRepo = commandRepo;
 		this.productRestClient = productRestClient;
 	}
@@ -102,6 +111,10 @@ public class CommandServices {
 		}
 		if(availabilityAndStock.size()>=1) {
 			command.setValidated(true);
+			this.sendUpdateStockMesssage(new UpdateProductStockDto(1, 4));
+			/*command.getProducts().stream().forEach(x->{
+				sendUpdateStockMesssage(new UpdateProductStockDto(x.getId(), x.getQuantity()));
+			});*/
 			this.commandRepo.save(command);
 			return ResponseEntity.ok(Map.of("message",availabilityAndStock+""));
 		}else return ResponseEntity.badRequest().body(Map.of("command no validé",""+availabilityAndStock));
@@ -124,5 +137,20 @@ public class CommandServices {
 			return product;
 		}
 		return null;
+	}
+	
+	public void sendUpdateStockMesssage(UpdateProductStockDto updateStockMessage) {
+		try {
+			System.out.println("sending update message productId=" +updateStockMessage.getProductId()+ " quantity=" +updateStockMessage.getQuantity());
+			Message<UpdateProductStockDto> update = MessageBuilder
+					.withPayload(updateStockMessage)
+					.setHeader(KafkaHeaders.TOPIC, "update_stock")
+					.build();
+
+			KafkaTemplate.send(update);
+		} catch (Exception e) {
+			System.out.println("can t send update Message=> "+e.getMessage());
+		}
+
 	}
 }
