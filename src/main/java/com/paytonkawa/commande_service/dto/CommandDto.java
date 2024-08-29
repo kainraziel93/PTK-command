@@ -9,6 +9,11 @@ public class CommandDto {
 
 	}
 	
+	public CommandDto(int productId,int quantity) {
+		this.productId = productId;
+		this.quantity = quantity;
+	}
+	
 	public int getProductId() {
 		return productId;
 	}

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import com.paytonkawa.commande_service.entity.Product;
 
-@FeignClient(name = "product-service", url = "http://localhost:8080/product")
+@FeignClient(name = "product-service", url = "${product-service.url}")
 public interface ProductFeignClient {
 	@GetMapping()
 	ResponseEntity<List<Product>> getAllProducts();

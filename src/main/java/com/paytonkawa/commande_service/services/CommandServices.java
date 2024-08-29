@@ -31,7 +31,7 @@ public class CommandServices {
 	@Value("${kafka.topic}")
 	private String messageTopic;
 	@Autowired
-	private KafkaTemplate KafkaTemplate;
+	private KafkaTemplate<?, ?> KafkaTemplate;
 	
 	public CommandServices(CommandRepo commandRepo,
 			ProductFeignClient productRestClient
@@ -45,8 +45,10 @@ public class CommandServices {
 		return ResponseEntity.ok(commands);
 	}
 	
-    public ResponseEntity<Command> addCommand(CommandDto commandDto){
-		Command command = this.commandRepo.save(new Command());
+    public ResponseEntity<Command> addCommand(int customerId,CommandDto commandDto){
+    	Command commandToSave = new Command();
+    	commandToSave.setCustomerId(customerId);
+		Command command = this.commandRepo.save(commandToSave);
 		
 		return addProductToCart(command.getId(),commandDto);
 	}

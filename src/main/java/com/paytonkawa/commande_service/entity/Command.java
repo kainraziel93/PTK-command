@@ -96,6 +96,12 @@ public class Command {
 		return "Command [id=" + id + ", customerId=" + customerId + ", products=" + products + ", createdAt="
 				+ createdAt + " ,validated=" +validated+ " ]";
 	}
+
+
+	public void setProducts(List<Product> asList) {
+		this.products = asList;
+		
+	}
 	
 	
 	

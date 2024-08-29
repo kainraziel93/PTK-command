@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,9 +47,9 @@ public class CommandController {
 	}
 	@Operation(summary = "create a new command", description = "create a new command need to provide a valide product id and a quantity")
 	@PostMapping()
-	public ResponseEntity<Command> newCommand(@RequestBody CommandDto newCommand){
-		
-		return this.commandServices.addCommand(newCommand);
+	public ResponseEntity<Command> newCommand(@RequestAttribute("customer-id") int customerId ,@RequestBody CommandDto newCommand){
+		System.out.println("customer id is"+customerId);
+		return this.commandServices.addCommand(customerId,newCommand);
 	}
 	
 	@Operation(summary = "add a product to an existing command", description = "the command should still be not validated in case it is you can not add a product to it")
