@@ -19,17 +19,14 @@ public class SecurityBeans {
 	
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		return http
-                .csrf().disable() // Disable CSRF protection for stateless authentication
-                .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless session management
-                .and()
-                .addFilterBefore(new SecurityFilter(authenticationfeignclient), UsernamePasswordAuthenticationFilter.class) // Custom security filter
-                .authorizeHttpRequests()
-                    .anyRequest().authenticated() // All requests require authentication
-                .and()
-                .build(); // Build the security filter chain
-    }
+	    return http
+	        .csrf().disable()
+	        .authorizeHttpRequests(x ->{ x
+	            .requestMatchers("/actuator/**","/actuator/prometheus","/actuator","/swagger-ui","/swagger-ui/**","swagger-ui/**/**").permitAll()
+	            .anyRequest().authenticated();
+	        }).addFilterBefore(new SecurityFilter(authenticationfeignclient), UsernamePasswordAuthenticationFilter.class) 
+	        .build(); 
+	}
 	
 	
 }
