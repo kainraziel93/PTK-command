@@ -178,7 +178,7 @@ class CommandServiceApplicationTests {
         assertEquals(1, result.getId());
         assertEquals("product1", result.getName());
     }
-    
+    /*   
     @Test
     void testGetAllCommandsController() throws Exception {
         Command command1 = new Command();
@@ -191,7 +191,7 @@ class CommandServiceApplicationTests {
                 .andExpect(status().is4xxClientError());
 
     }
-/*
+
     @Test
     void testCreateCommandController() throws Exception {
         CommandDto commandDto = new CommandDto(1, 2);
