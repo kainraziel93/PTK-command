@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.slf4j.LoggerFactory;
 
 import com.paytonkawa.commande_service.dto.CommandDto;
-import com.paytonkawa.commande_service.dto.UpdateProductStockDto;
+import com.paytonkawa.commande_service.dto.updateProductStockDto;
 import com.paytonkawa.commande_service.entity.Command;
 import com.paytonkawa.commande_service.entity.Product;
 import com.paytonkawa.commande_service.repo.CommandRepo;
@@ -116,7 +116,7 @@ public class CommandServices {
 				command.setValidated(true);
 				
 				command.getProducts().stream().forEach(x->{
-					sendUpdateStockMesssage(new UpdateProductStockDto(x.getId(), x.getQuantity()));
+					sendUpdateStockMesssage(new updateProductStockDto(x.getId(), x.getQuantity()));
 				});
 				this.commandRepo.save(command);
 				return ResponseEntity.ok(Map.of("message",availabilityAndStock+""));
@@ -147,10 +147,10 @@ public class CommandServices {
 		return null;
 	}
 	
-	public void sendUpdateStockMesssage(UpdateProductStockDto updateStockMessage) {
+	public void sendUpdateStockMesssage(updateProductStockDto updateStockMessage) {
 		try {
 			System.out.println("sending update message productId=" +updateStockMessage.getProductId()+ " quantity=" +updateStockMessage.getQuantity());
-			Message<UpdateProductStockDto> update = MessageBuilder
+			Message<updateProductStockDto> update = MessageBuilder
 					.withPayload(updateStockMessage)
 					.setHeader(KafkaHeaders.TOPIC, "update_stock")
 					.build();

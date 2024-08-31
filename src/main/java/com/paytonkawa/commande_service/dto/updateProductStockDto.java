@@ -1,11 +1,11 @@
 package com.paytonkawa.commande_service.dto;
 
-public class UpdateProductStockDto {
+public class updateProductStockDto {
 private int productId;
 private int quantity;
 
 
-public UpdateProductStockDto(int productId, int quantity) {
+public updateProductStockDto(int productId, int quantity) {
 	super();
 	this.productId = productId;
 	this.quantity = quantity;
