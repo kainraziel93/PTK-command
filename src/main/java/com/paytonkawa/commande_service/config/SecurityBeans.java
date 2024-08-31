@@ -22,8 +22,9 @@ public class SecurityBeans {
 	    return http
 	        .csrf().disable()
 	        .authorizeHttpRequests(x ->{ x
-	            .requestMatchers("/actuator/**","/actuator/prometheus","/actuator","/swagger-ui","/swagger-ui/**","swagger-ui/**/**").permitAll()
-	            .anyRequest().authenticated();
+	        .requestMatchers("/actuator","/actuator/prometheus","/actuator/**","/swagger-ui/index.html","/swagger-ui/index.html#","/swagger-ui/index.html#/").permitAll()
+     	   .anyRequest().authenticated();
+	         
 	        }).addFilterBefore(new SecurityFilter(authenticationfeignclient), UsernamePasswordAuthenticationFilter.class) 
 	        .build(); 
 	}
