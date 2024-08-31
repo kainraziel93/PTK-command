@@ -1,4 +1,4 @@
-package com.paytonkawa.commande_service.entity;
+ package com.paytonkawa.commande_service.entity;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -10,32 +10,32 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
+import jakarta.persistence.Transient;
 @Entity
 public class Product {
 
 	@Id
 	private int id;
-	@NotBlank(message="the product should have a name")
-	@Size(min=2)
 	private String name;
 	private String description;
+	@Transient
 	private int stock;
-	@NotBlank(message="you should asign a price to the product")
 	private double price;
 	private LocalDateTime createdAt;
+	private int quantity;
 	
 	public Product() {
 
 	}
 
-	public Product(int id,String name, String description, int stock, double price,LocalDateTime createdAt) {
+	public Product(int id,String name, String description, int stock, double price,LocalDateTime createdAt,int quantity) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.stock = stock;
 		this.price = price;
+		this.quantity = quantity;
 		this.createdAt = createdAt;
 	}
 	
@@ -45,6 +45,16 @@ public class Product {
 
 	public String getName() {
 		return name;
+	}
+	
+	
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
 	public void setName(String name) {
@@ -92,7 +102,7 @@ public class Product {
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", stock=" + stock + ", price="
-				+ price + ", createdAt=" + createdAt + "]";
+				+ price + ", createdAt=" + createdAt + ", quantity=" +quantity+ "]";
 	}
 	
 	

@@ -6,10 +6,13 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 
 @Entity
 public class Command {
@@ -19,11 +22,14 @@ public class Command {
 	private int id;
 	@NotBlank(message="customer id cannot be blank")
 	private int customerId;
+	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	private List<Product> products;
 	private LocalDateTime createdAt;
-	
+	private boolean validated = false;
 	
 	public Command() {
+		this.products = new ArrayList<>();
+		this.createdAt = LocalDateTime.now();
 	}
 
 
@@ -32,13 +38,25 @@ public class Command {
 		super();
 		this.customerId = customerId;
 		this.products = new ArrayList<>();
-		this.createdAt = createdAt;
+		this.createdAt = LocalDateTime.now();
 	}
 	
 	
-	public void addProductToCommand(Product p) {
+	
+	
+	public boolean isValidated() {
+		return validated;
+	}
+
+
+	public void setValidated(boolean validated) {
+		this.validated = validated;
+	}
+
+
+	public void addProductToCommand(Product product) {
 		if(this.products==null) this.products = new ArrayList<>();
-		this.products.add(p);
+		this.products.add(product);
 	}
 
 	public int getCustomerId() {
@@ -76,7 +94,13 @@ public class Command {
 	@Override
 	public String toString() {
 		return "Command [id=" + id + ", customerId=" + customerId + ", products=" + products + ", createdAt="
-				+ createdAt + "]";
+				+ createdAt + " ,validated=" +validated+ " ]";
+	}
+
+
+	public void setProducts(List<Product> asList) {
+		this.products = asList;
+		
 	}
 	
 	
