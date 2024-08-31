@@ -14,7 +14,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
 import com.fasterxml.jackson.databind.ser.std.StringSerializer;
-import com.paytonkawa.commande_service.dto.updateProductStockDto;
+import com.paytonkawa.commande_service.dto.UpdateProductStockDto;
 
 @Configuration
 public class KafkaProducerConfig {
