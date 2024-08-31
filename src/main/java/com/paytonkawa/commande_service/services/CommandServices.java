@@ -102,25 +102,31 @@ public class CommandServices {
 	public ResponseEntity<Map<String,String>> validateCommand(int commandId){
 		List<String> availabilityAndStock=new ArrayList<>();
 		Command command = this.commandRepo.findById(commandId).get();
-		for(Product p : command.getProducts()) {
-			Product product = this.getProductById(p.getId());
-			if(product==null) availabilityAndStock.add("product with name=>" +p.getName()+ " not available no more ");
-			else {
-				availabilityAndStock.add( product.getStock()<p.getQuantity()==true?
-						"product with (id,name)=>("+product.getId()+","+product.getName()+")not available in wanted quantity,max available"+product.getStock()
-						:"product with (id,name) ("+product.getId()+ ","+product.getName()+")purchased successfully");
-			}	
+		if(!command.isValidated()) {
+			for(Product p : command.getProducts()) {
+				Product product = this.getProductById(p.getId());
+				if(product==null) availabilityAndStock.add("product with name=>" +p.getName()+ " not available no more ");
+				else {
+					availabilityAndStock.add( product.getStock()<p.getQuantity()==true?
+							"product with (id,name)=>("+product.getId()+","+product.getName()+")not available in wanted quantity,max available"+product.getStock()
+							:"product with (id,name) ("+product.getId()+ ","+product.getName()+")purchased successfully");
+				}	
+			}
+			if(availabilityAndStock.size()>=1) {
+				command.setValidated(true);
+				
+				command.getProducts().stream().forEach(x->{
+					sendUpdateStockMesssage(new UpdateProductStockDto(x.getId(), x.getQuantity()));
+				});
+				this.commandRepo.save(command);
+				return ResponseEntity.ok(Map.of("message",availabilityAndStock+""));
+			}else return ResponseEntity.badRequest().body(Map.of("command no validé",""+availabilityAndStock));
 		}
-		if(availabilityAndStock.size()>=1) {
-			command.setValidated(true);
-			this.sendUpdateStockMesssage(new UpdateProductStockDto(1, 4));
-			/*command.getProducts().stream().forEach(x->{
-				sendUpdateStockMesssage(new UpdateProductStockDto(x.getId(), x.getQuantity()));
-			});*/
-			this.commandRepo.save(command);
-			return ResponseEntity.ok(Map.of("message",availabilityAndStock+""));
-		}else return ResponseEntity.badRequest().body(Map.of("command no validé",""+availabilityAndStock));
-	}
+		
+		return ResponseEntity.badRequest().body(Map.of("error :"," can t validate a command that is already valide"));
+
+		}
+
 	
 	public ResponseEntity<String> deleteCommand(int commandId){
 		try {
